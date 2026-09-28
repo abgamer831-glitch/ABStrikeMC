@@ -1,0 +1,2035 @@
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLOCKBASE — Ultimate Minecraft Resource Packs, Shaders & Pro Gear Hub</title>
+  <meta name="description" content="Curated Minecraft 1.21+ resource packs, benchmarked shaders, CPS tester, and elite rapid-trigger keyboards & drag-click mice tested by competitive players." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=VT323&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js for interactive 3D Voxel Block in Hero -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            mc: {
+              dirt: '#866043',
+              dirtDark: '#573d26',
+              grass: '#5c8e32',
+              grassLight: '#74b638',
+              stone: '#686868',
+              stoneDark: '#3a3a3a',
+              bedrock: '#1e1e1e',
+              diamond: '#4dedf4',
+              diamondDark: '#2bb3be',
+              gold: '#fcee4b',
+              goldDark: '#d49b18',
+              emerald: '#17dd62',
+              emeraldDark: '#0e8f3d',
+              redstone: '#ff2200',
+              netherite: '#443a3b',
+              obsidian: '#120c1f',
+              portal: '#9932cc',
+              invBg: '#c6c6c6',
+              invBorder: '#373737',
+              invSlot: '#8b8b8b'
+            }
+          },
+          fontFamily: {
+            pixel: ['"Press Start 2P"', 'monospace'],
+            vt: ['"VT323"', 'monospace'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            body: ['"Inter"', 'sans-serif']
+          },
+          boxShadow: {
+            'mc-btn': 'inset 2px 2px 0px rgba(255,255,255,0.4), inset -2px -2px 0px rgba(0,0,0,0.6), 0 4px 0 #1b1b1b',
+            'mc-btn-active': 'inset -2px -2px 0px rgba(255,255,255,0.4), inset 2px 2px 0px rgba(0,0,0,0.6), 0 1px 0 #1b1b1b',
+            'mc-panel': 'inset 3px 3px 0px #ffffff, inset -3px -3px 0px #555555, 0 8px 24px rgba(0,0,0,0.6)',
+            'mc-slot': 'inset 2px 2px 0px #373737, inset -2px -2px 0px #ffffff',
+            'glow-diamond': '0 0 25px rgba(77, 237, 244, 0.4)',
+            'glow-emerald': '0 0 25px rgba(23, 221, 98, 0.4)',
+            'glow-redstone': '0 0 25px rgba(255, 34, 0, 0.45)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Pixel & Minecraft UI Styles */
+    :root {
+      --mc-border-light: #dcdcdc;
+      --mc-border-dark: #373737;
+    }
+
+    body {
+      background-color: #0d1217;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(92, 142, 50, 0.15) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+    }
+
+    /* Pixelated rendering */
+    .pixelated {
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    /* Minecraft UI bevel borders */
+    .mc-box {
+      background: #232a31;
+      border: 3px solid #000;
+      box-shadow: 
+        inset 2px 2px 0px rgba(255,255,255,0.15), 
+        inset -2px -2px 0px rgba(0,0,0,0.5),
+        0 6px 0px rgba(0,0,0,0.4);
+    }
+
+    .mc-box-stone {
+      background: #2b353f;
+      border: 3px solid #141a20;
+      box-shadow: inset 2px 2px 0px #5a6977, inset -2px -2px 0px #11171d;
+    }
+
+    .mc-button {
+      position: relative;
+      background: #4a5968;
+      border: 2px solid #000;
+      box-shadow: inset 2px 2px 0px #8899aa, inset -2px -2px 0px #212932, 0 3px 0 #0f1317;
+      transition: all 0.08s ease;
+      font-family: 'Press Start 2P', monospace;
+      text-shadow: 2px 2px 0px #111;
+      user-select: none;
+    }
+    .mc-button:hover {
+      background: #5d6f82;
+      box-shadow: inset 2px 2px 0px #9cb2c7, inset -2px -2px 0px #2a3440, 0 3px 0 #0f1317;
+      transform: translateY(-1px);
+    }
+    .mc-button:active {
+      transform: translateY(2px);
+      box-shadow: inset -2px -2px 0px #8899aa, inset 2px 2px 0px #1a2128, 0 1px 0 #0f1317;
+      background: #3b4754;
+    }
+
+    .mc-button-green {
+      background: #468625;
+      box-shadow: inset 2px 2px 0px #86d654, inset -2px -2px 0px #234810, 0 3px 0 #122408;
+      color: #fff;
+    }
+    .mc-button-green:hover {
+      background: #539e2d;
+      box-shadow: inset 2px 2px 0px #9aee61, inset -2px -2px 0px #295713, 0 3px 0 #122408;
+    }
+    .mc-button-green:active {
+      background: #36691c;
+      box-shadow: inset -2px -2px 0px #86d654, inset 2px 2px 0px #1b380b, 0 1px 0 #122408;
+    }
+
+    .mc-button-diamond {
+      background: #258c94;
+      box-shadow: inset 2px 2px 0px #60f0fa, inset -2px -2px 0px #124b50, 0 3px 0 #092629;
+      color: #061e20;
+      text-shadow: none;
+    }
+    .mc-button-diamond:hover {
+      background: #2ca5af;
+      box-shadow: inset 2px 2px 0px #83f5fd, inset -2px -2px 0px #185c63, 0 3px 0 #092629;
+    }
+
+    /* Custom Item Frame Slot */
+    .mc-slot {
+      background: #192026;
+      border: 2px solid #0e1317;
+      box-shadow: inset 2px 2px 0px #0b0e11, inset -2px -2px 0px #313d49;
+    }
+
+    /* Animated XP bar */
+    .xp-bar-fill {
+      background: linear-gradient(180deg, #bbf853 0%, #70b719 50%, #4c8a0c 100%);
+      box-shadow: 0 0 10px rgba(134, 214, 84, 0.6);
+    }
+
+    /* Item Tag Badges */
+    .mc-badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(0,0,0,0.6);
+    }
+
+    /* Tooltip styling like Minecraft */
+    .mc-tooltip {
+      background: #11031a;
+      border: 2px solid #2e0854;
+      box-shadow: 0 0 12px rgba(46, 8, 84, 0.8), inset 0 0 4px #491384;
+    }
+
+    /* Glowing ore pulse */
+    @keyframes oreGlow {
+      0%, 100% { filter: drop-shadow(0 0 3px #4dedf4); }
+      50% { filter: drop-shadow(0 0 14px #4dedf4); }
+    }
+    .diamond-pulse {
+      animation: oreGlow 3s infinite ease-in-out;
+    }
+
+    /* CPS Clicker Ripple */
+    .click-target:active {
+      transform: scale(0.96);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #10151b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #394755;
+      border: 2px solid #10151b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #55677b;
+    }
+  </style>
+</head>
+<body class="text-slate-100 selection:bg-mc-grassLight selection:text-black">
+
+  <!-- ================= TOP XP PROGRESS BAR & SOUND TOGGLE ================= -->
+  <div class="fixed top-0 left-0 right-0 z-[100] h-2 bg-black/60 backdrop-blur">
+    <div id="scrollXpBar" class="h-full xp-bar-fill w-0 transition-all duration-75"></div>
+  </div>
+
+  <!-- Audio Toggle Floating Tool -->
+  <div class="fixed bottom-6 right-6 z-[90] flex items-center gap-2">
+    <button id="soundToggleBtn" onclick="toggleAudio()" class="mc-button px-3 py-2 text-xs flex items-center gap-2 bg-[#25303b] border-2 border-black" title="Toggle Minecraft Sound Effects">
+      <span id="soundIcon">🔊</span>
+      <span class="text-[10px] hidden sm:inline">SFX: <span id="soundState" class="text-mc-emerald">ON</span></span>
+    </button>
+  </div>
+
+  <!-- ================= HEADER / NAVIGATION ================= -->
+  <header class="sticky top-2 z-50 px-4 sm:px-8 max-w-7xl mx-auto my-3">
+    <nav class="mc-box-stone rounded-lg px-4 sm:px-6 py-3 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#top" class="flex items-center gap-3 group" onclick="playMcSound('click')">
+        <!-- Pixel Grass Block Icon -->
+        <div class="w-10 h-10 relative flex-shrink-0 pixelated transition-transform group-hover:rotate-6">
+          <svg viewBox="0 0 16 16" class="w-full h-full drop-shadow-md">
+            <!-- Dirt base -->
+            <rect x="0" y="4" width="16" height="12" fill="#866043"/>
+            <rect x="2" y="8" width="3" height="3" fill="#573d26"/>
+            <rect x="9" y="11" width="3" height="3" fill="#573d26"/>
+            <rect x="12" y="6" width="2" height="3" fill="#573d26"/>
+            <rect x="5" y="13" width="4" height="2" fill="#573d26"/>
+            <!-- Grass top -->
+            <rect x="0" y="0" width="16" height="5" fill="#5c8e32"/>
+            <rect x="0" y="0" width="16" height="2" fill="#74b638"/>
+            <rect x="1" y="5" width="2" height="3" fill="#5c8e32"/>
+            <rect x="5" y="5" width="3" height="4" fill="#5c8e32"/>
+            <rect x="11" y="5" width="2" height="3" fill="#5c8e32"/>
+            <rect x="14" y="5" width="2" height="2" fill="#5c8e32"/>
+            <rect x="0" y="0" width="16" height="16" fill="none" stroke="#000" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-pixel text-white text-sm sm:text-base tracking-wider drop-shadow-[2px_2px_0_#000]">BLOCKBASE</span>
+            <span class="mc-badge bg-mc-emerald text-black px-1.5 py-0.5 rounded text-[7px] font-bold">1.21+</span>
+          </div>
+          <p class="font-vt text-mc-diamond text-sm leading-none tracking-wider">RESOURCES • SHADERS • PRO GEAR</p>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center gap-6 font-display font-semibold text-sm">
+        <a href="#packs" onclick="playMcSound('click')" class="text-slate-300 hover:text-mc-emerald transition-colors flex items-center gap-1.5">
+          <span class="text-xs">📦</span> Resource Packs
+        </a>
+        <a href="#shaders" onclick="playMcSound('click')" class="text-slate-300 hover:text-mc-diamond transition-colors flex items-center gap-1.5">
+          <span class="text-xs">✨</span> Shaders
+        </a>
+        <a href="#gear" onclick="playMcSound('click')" class="text-slate-300 hover:text-mc-gold transition-colors flex items-center gap-1.5">
+          <span class="text-xs">⚔️</span> PvP Keyboards & Mice
+        </a>
+        <a href="#cps" onclick="playMcSound('click')" class="text-slate-300 hover:text-mc-redstone transition-colors flex items-center gap-1.5">
+          <span class="text-xs">⚡</span> CPS Tester
+        </a>
+        <a href="#benchmarks" onclick="playMcSound('click')" class="text-slate-300 hover:text-mc-emeraldLight transition-colors flex items-center gap-1.5">
+          <span class="text-xs">📊</span> FPS Benchmarks
+        </a>
+      </div>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3">
+        <a href="#gear" onclick="playMcSound('level')" class="mc-button mc-button-green text-[10px] px-3.5 py-2.5 rounded hidden sm:inline-block">
+          CRAFT LOADOUT
+        </a>
+        <button id="mobileMenuBtn" onclick="toggleMobileNav()" class="md:hidden mc-button px-2.5 py-2 text-xs">
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden mc-box-stone mt-2 p-4 rounded-lg space-y-3 font-display text-sm font-semibold">
+      <a href="#packs" onclick="toggleMobileNav(); playMcSound('click')" class="block py-2 px-3 rounded hover:bg-black/30 text-slate-200">📦 Resource Packs</a>
+      <a href="#shaders" onclick="toggleMobileNav(); playMcSound('click')" class="block py-2 px-3 rounded hover:bg-black/30 text-slate-200">✨ Shaders Lab</a>
+      <a href="#gear" onclick="toggleMobileNav(); playMcSound('click')" class="block py-2 px-3 rounded hover:bg-black/30 text-slate-200">⚔️ Competitive Gear</a>
+      <a href="#cps" onclick="toggleMobileNav(); playMcSound('click')" class="block py-2 px-3 rounded hover:bg-black/30 text-slate-200">⚡ CPS Click Speed Test</a>
+      <a href="#benchmarks" onclick="toggleMobileNav(); playMcSound('click')" class="block py-2 px-3 rounded hover:bg-black/30 text-slate-200">📊 FPS Calculator</a>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION (WITH 3D VOXEL BLOCK) ================= -->
+  <section id="top" class="relative pt-6 pb-16 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
+    
+    <!-- Minecraft Health & Hunger Bar Status HUD -->
+    <div class="flex items-center justify-between max-w-xl mx-auto mb-8 px-4 py-2 bg-black/40 rounded-full border border-white/10 backdrop-blur-sm text-[11px] font-pixel text-slate-300">
+      <div class="flex items-center gap-1">
+        <span class="text-red-500">❤️❤️❤️❤️❤️</span>
+        <span class="text-red-500 hidden sm:inline">❤️❤️❤️❤️❤️</span>
+        <span class="text-[9px] text-slate-400 ml-1">20 HP</span>
+      </div>
+      <div class="text-mc-gold font-bold px-2 py-0.5 bg-black/50 rounded border border-mc-gold/40">
+        LVL 100
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="text-[9px] text-slate-400 mr-1">HUNGER</span>
+        <span class="text-amber-600">🍗🍗🍗🍗🍗</span>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-10 items-center">
+      
+      <!-- Hero Copy -->
+      <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-mc-grass/20 border border-mc-grass/50 text-mc-grassLight font-pixel text-[9px] uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-mc-emerald animate-ping"></span>
+          Java & Bedrock Tricky Trials Ready
+        </div>
+
+        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.1]">
+          Level up your <br/>
+          <span class="font-pixel text-3xl sm:text-4xl text-mc-emerald drop-shadow-[0_4px_0_#0a471c]">MINECRAFT</span> 
+          <span class="text-mc-diamond inline-block">Experience.</span>
+        </h1>
+
+        <p class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+          The curated arsenal for builders, speedrunners & PvP champions. Hand-tested <span class="text-white font-semibold">1.21 resource packs</span>, benchmarked <span class="text-white font-semibold">ultra-performance shaders</span>, and <span class="text-white font-semibold">rapid-trigger magnetic keyboards & mice</span> built for god-bridging.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
+          <a href="#packs" onclick="playMcSound('click')" class="mc-button mc-button-green px-6 py-4 rounded text-xs sm:text-sm font-bold flex items-center gap-3">
+            <span>⛏️</span> BROWSE PACKS (2,400+)
+          </a>
+          <a href="#shaders" onclick="playMcSound('click')" class="mc-button mc-button-diamond px-6 py-4 rounded text-xs sm:text-sm font-bold flex items-center gap-3">
+            <span>✨</span> SHADER BENCHMARKS
+          </a>
+          <a href="#gear" onclick="playMcSound('click')" class="mc-button px-5 py-4 rounded text-xs sm:text-sm text-slate-200 flex items-center gap-2">
+            <span>🖱️</span> TOP PVP GEAR
+          </a>
+        </div>
+
+        <!-- Fast Specs Ticker -->
+        <div class="grid grid-cols-3 gap-3 pt-6 border-t border-white/10 max-w-lg mx-auto lg:mx-0">
+          <div class="p-3 bg-black/40 border border-white/5 rounded">
+            <div class="font-pixel text-mc-emerald text-sm sm:text-lg">0%</div>
+            <div class="font-vt text-slate-400 text-sm">MALWARE / AD-FREE</div>
+          </div>
+          <div class="p-3 bg-black/40 border border-white/5 rounded">
+            <div class="font-pixel text-mc-diamond text-sm sm:text-lg">240+</div>
+            <div class="font-vt text-slate-400 text-sm">FPS OPTIMIZED</div>
+          </div>
+          <div class="p-3 bg-black/40 border border-white/5 rounded">
+            <div class="font-pixel text-mc-gold text-sm sm:text-lg">0.1ms</div>
+            <div class="font-vt text-slate-400 text-sm">RAPID TRIGGER GEAR</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Interactive 3D Block Container -->
+      <div class="lg:col-span-5 flex flex-col items-center">
+        <div class="relative w-full max-w-[380px] aspect-square mc-box rounded-xl p-4 bg-[#141b22]/90 flex flex-col items-center justify-between">
+          
+          <!-- Box Header -->
+          <div class="w-full flex items-center justify-between pb-2 border-b border-white/10">
+            <span class="font-pixel text-[9px] text-mc-diamond flex items-center gap-1.5">
+              <span class="w-2 h-2 bg-mc-diamond inline-block"></span> 3D BLOCK INSPECTOR
+            </span>
+            <div class="flex gap-1">
+              <button onclick="changeBlockType('grass')" class="px-2 py-1 text-[8px] font-pixel rounded bg-mc-grass text-white" title="Grass Block">GRASS</button>
+              <button onclick="changeBlockType('diamond')" class="px-2 py-1 text-[8px] font-pixel rounded bg-[#1f737c] text-mc-diamond" title="Diamond Ore">DIAMOND</button>
+              <button onclick="changeBlockType('tnt')" class="px-2 py-1 text-[8px] font-pixel rounded bg-[#991b1b] text-white" title="TNT Block">TNT</button>
+            </div>
+          </div>
+
+          <!-- ThreeJS WebGL Canvas Element -->
+          <div id="threeBlockCanvas" class="w-full h-56 cursor-grab active:cursor-grabbing relative flex items-center justify-center">
+            <!-- 3D Canvas injected here via JS -->
+            <div class="absolute bottom-1 right-2 text-[9px] font-vt text-slate-400 select-none pointer-events-none">
+              🖱️ DRAG TO ROTATE
+            </div>
+          </div>
+
+          <!-- Interactive Footer Info -->
+          <div class="w-full p-2.5 bg-black/50 border border-white/10 rounded font-vt text-slate-300 text-xs flex items-center justify-between">
+            <span id="blockDesc">Grass Block • Hardness: 0.6 • Tool: Shovel</span>
+            <button onclick="mineBlockEffect()" class="mc-button mc-button-green text-[8px] px-2 py-1">PUNCH!</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= MARQUEE TICKER ================= -->
+  <div class="w-full bg-[#161f28] border-y-2 border-black py-2.5 overflow-hidden">
+    <div class="flex whitespace-nowrap animate-marquee gap-8 font-pixel text-[10px] text-slate-300">
+      <span class="flex items-center gap-2"><span class="text-mc-emerald">✦</span> SODIUM + IRIS PERFORMANCE GUIDE READY</span>
+      <span class="flex items-center gap-2"><span class="text-mc-diamond">✦</span> WOOTING 60HE+ 0.1MM RAPID TRIGGER IN STOCK</span>
+      <span class="flex items-center gap-2"><span class="text-mc-gold">✦</span> FAITHFUL 32X 1.21 UPDATED WITH TRICKY TRIALS TILES</span>
+      <span class="flex items-center gap-2"><span class="text-mc-redstone">✦</span> COMPLEMENTARY REIMAGINED V5.2.2 BENCHMARKED</span>
+      <span class="flex items-center gap-2"><span class="text-mc-emerald">✦</span> LOGITECH PRO X SUPERLIGHT 2 DRAG-CLICK PROFILES</span>
+      <span class="flex items-center gap-2"><span class="text-mc-diamond">✦</span> REAL-TIME CPS SPEED TESTER ADDED</span>
+    </div>
+  </div>
+
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: inline-flex;
+      animation: marquee 25s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+
+  <!-- ================= RESOURCE PACKS SECTION ================= -->
+  <section id="packs" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="flex items-center gap-2 font-pixel text-xs text-mc-grassLight mb-2">
+          <span class="w-3 h-3 bg-mc-grass inline-block"></span>
+          <span>TEXTURE & RESOURCE VAULT</span>
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">
+          Curated Texture Packs for Every Playstyle
+        </h2>
+        <p class="text-slate-400 mt-2 font-body text-sm sm:text-base max-w-2xl">
+          Tested on Minecraft 1.20 - 1.21. No broken textures, no fishy download managers, just straight direct pack zips.
+        </p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="flex flex-wrap items-center gap-2">
+        <input 
+          type="text" 
+          id="packSearchInput" 
+          onkeyup="filterPacks()" 
+          placeholder="Search pack by name..." 
+          class="bg-black/60 border-2 border-slate-700 text-white text-xs px-3 py-2.5 rounded focus:border-mc-emerald outline-none font-pixel w-full sm:w-56"
+        />
+      </div>
+    </div>
+
+    <!-- Category Filter Tabs (Minecraft Style) -->
+    <div class="flex flex-wrap gap-2 mb-8 pb-3 border-b border-white/10" id="packTabGroup">
+      <button onclick="setPackCategory('all', this)" class="mc-button mc-button-green text-[9px] px-3.5 py-2.5 rounded active">ALL PACKS</button>
+      <button onclick="setPackCategory('pvp', this)" class="mc-button text-[9px] px-3.5 py-2.5 rounded text-slate-200">⚔️ PVP & FPS BOOST</button>
+      <button onclick="setPackCategory('vanilla', this)" class="mc-button text-[9px] px-3.5 py-2.5 rounded text-slate-200">🌿 VANILLA ENHANCED</button>
+      <button onclick="setPackCategory('realistic', this)" class="mc-button text-[9px] px-3.5 py-2.5 rounded text-slate-200">💎 REALISM & PBR</button>
+      <button onclick="setPackCategory('gui', this)" class="mc-button text-[9px] px-3.5 py-2.5 rounded text-slate-200">🎛️ DARK UI & UTILITY</button>
+    </div>
+
+    <!-- Pack Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="packsGrid">
+      
+      <!-- PACK 1: Faithful 32x -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="vanilla" data-name="faithful 32x renewed">
+        <div>
+          <!-- Thumbnail banner with Minecraft-styled border -->
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="Faithful 32x" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-mc-emerald px-2 py-1 rounded border border-mc-emerald/40">32x32</span>
+            <span class="absolute top-3 right-3 mc-badge bg-mc-gold text-black px-2 py-1 rounded font-bold">LEGENDARY</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Faithful 32x Renewed</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              The gold standard Minecraft texture pack. Doubles default resolution while retaining every iconic voxel vibe. Clean, sharp, perfect for 1.21.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ 1.21 Tricky Trials</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Java & Bedrock</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 4.9 (4.8M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Resolution: <strong class="text-white">32x</strong></div>
+          <button onclick="openPackModal('Faithful 32x', '32x', 'Java 1.21 & Bedrock', 'Vattic & Community', '4.8M', 'Double the detail of default Minecraft without changing the artistic look you love. Perfect for vanilla builders and exploration.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (18MB)
+          </button>
+        </div>
+      </div>
+
+      <!-- PACK 2: BedlessPVP 68k -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="pvp" data-name="bedlesspvp 16x low fire short sword">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="PvP Texture Pack" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-mc-redstone px-2 py-1 rounded border border-mc-redstone/40">16x16</span>
+            <span class="absolute top-3 right-3 mc-badge bg-mc-redstone text-white px-2 py-1 rounded font-bold">MAX FPS</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Bedless 16x PvP Clean</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Designed strictly for Bedwars, SkyWars, and Ranked Duelists. Short swords, transparent low fire, highlighted diamond ores and high-visibility particle effects.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ Short Swords</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Low Fire & Clear Glass</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 5.0 (2.1M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Resolution: <strong class="text-white">16x PvP</strong></div>
+          <button onclick="openPackModal('Bedless 16x PvP Clean', '16x', 'Java 1.8.9 - 1.21', 'Bedless Community', '2.1M', 'Short swords, transparent GUI, clear water, low fire, and outlined ores engineered for competitive PvP and highest framerates.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (9MB)
+          </button>
+        </div>
+      </div>
+
+      <!-- PACK 3: Clarity Realism 128x -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="realistic" data-name="clarity realism pbr 128x">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80" alt="Clarity Realism" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-mc-diamond px-2 py-1 rounded border border-mc-diamond/40">128x128</span>
+            <span class="absolute top-3 right-3 mc-badge bg-mc-diamond text-black px-2 py-1 rounded font-bold">PBR READY</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Clarity 128x PBR</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Hyper-detailed organic materials with complete LabPBR normal & specular maps. Pair this with ray-traced shaders to see cobblestone pop and water ripple realistically.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ 3D Normal Mapping</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Iris / OptiFine</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 4.9 (1.6M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Resolution: <strong class="text-white">128x HD</strong></div>
+          <button onclick="openPackModal('Clarity 128x PBR', '128x', 'Java 1.20+', 'SCtester', '1.6M', 'Photorealistic pixel clarity with full bump-mapping and reflective material support designed specifically for high-end shader setups.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (92MB)
+          </button>
+        </div>
+      </div>
+
+      <!-- PACK 4: Bare Bones Flat -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="vanilla" data-name="bare bones trailer cartoon">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80" alt="Bare Bones" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-mc-gold px-2 py-1 rounded border border-mc-gold/40">16x16</span>
+            <span class="absolute top-3 right-3 mc-badge bg-mc-emerald text-black px-2 py-1 rounded font-bold">TRAILER LOOK</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Bare Bones Official</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Brings the vibrant, clean, simplified aesthetic of Mojang's official animated trailers directly into your gameplay. Vibrant, saturated, and extremely easy on the eyes.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ Official Trailer Style</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Lightweight</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 4.8 (3.9M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Resolution: <strong class="text-white">16x Flat</strong></div>
+          <button onclick="openPackModal('Bare Bones Official', '16x', 'Java & Bedrock 1.21', 'RobotPantaloons', '3.9M', 'Experience Minecraft exactly as it appears in the official cinematic update trailers. Clean flat colors with no noise.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (12MB)
+          </button>
+        </div>
+      </div>
+
+      <!-- PACK 5: Dark Mode UI Overhaul -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="gui" data-name="dark mode gui interface inventory">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Dark UI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-purple-400 px-2 py-1 rounded border border-purple-500/40">GUI</span>
+            <span class="absolute top-3 right-3 mc-badge bg-purple-600 text-white px-2 py-1 rounded font-bold">OLED DARK</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Midnight UI Dark Theme</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              No more blinding white inventory screens during late night mining sessions. Converts chest containers, crafting tables, and survival inventories into sleek obsidian slate.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ Eye-Friendly Dark Mode</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Mod Menu Compatible</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 4.9 (1.2M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Type: <strong class="text-white">Full GUI Overhaul</strong></div>
+          <button onclick="openPackModal('Midnight UI Dark Theme', 'GUI', 'All Versions', 'NeoDark', '1.2M', 'Replaces all vanilla bright gray inventory containers, hotbars, and HUD elements with dark obsidian themed styling.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (4MB)
+          </button>
+        </div>
+      </div>
+
+      <!-- PACK 6: Vanilla Tweaks Custom Comp -->
+      <div class="pack-card mc-box rounded-lg overflow-hidden flex flex-col justify-between group" data-category="gui vanilla" data-name="vanilla tweaks redstone visible indicators">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-900 border-b-2 border-black">
+            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Vanilla Tweaks" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#141b22] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-3 left-3 mc-badge bg-black/80 text-mc-redstone px-2 py-1 rounded border border-mc-redstone/40">REDSTONE</span>
+            <span class="absolute top-3 right-3 mc-badge bg-mc-gold text-black px-2 py-1 rounded font-bold">UTILITY</span>
+            <div class="absolute bottom-2 left-3 font-pixel text-xs text-white drop-shadow-[1px_1px_0_#000]">Vanilla Tweaks Ultimate</div>
+          </div>
+
+          <div class="p-4 space-y-3">
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Directional observers, visible redstone power level wires, clean brewing guide overlays, quiet nether portals, and borderless stained glass all rolled into one essential pack.
+            </p>
+            
+            <div class="flex flex-wrap gap-1.5 font-vt text-sm">
+              <span class="px-2 py-0.5 bg-black/40 text-mc-emeraldLight rounded border border-white/5">✓ Redstone Wire Numbers</span>
+              <span class="px-2 py-0.5 bg-black/40 text-mc-diamond rounded border border-white/5">✓ Brewing HUD Guide</span>
+              <span class="px-2 py-0.5 bg-black/40 text-slate-300 rounded border border-white/5">★ 5.0 (5.4M DLs)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 pt-0 border-t border-white/5 flex items-center justify-between gap-3 mt-4">
+          <div class="font-vt text-xs text-slate-400">Category: <strong class="text-white">QoL & Redstone</strong></div>
+          <button onclick="openPackModal('Vanilla Tweaks Ultimate', '16x Utility', '1.20 & 1.21', 'Xisuma & Team', '5.4M', 'The quintessential quality of life utility pack featuring power levels on redstone, cleaner glass borders, and directional dispensers.')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            DOWNLOAD (15MB)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SHADERS LAB & INTERACTIVE COMPARATOR ================= -->
+  <section id="shaders" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t-2 border-black bg-[#10171e]">
+    
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <div class="inline-flex items-center gap-2 font-pixel text-xs text-mc-diamond mb-2">
+        <span class="w-3 h-3 bg-mc-diamond inline-block"></span>
+        <span>BENCHMARKED SHADER PACKS</span>
+      </div>
+      <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white">
+        Transform Your World's Atmosphere
+      </h2>
+      <p class="text-slate-300 mt-3 text-sm sm:text-base">
+        Compare default vanilla graphics against ray-traced atmospheric shaders. Drag the interactive slider below to inspect water caustics, soft shadows, and dynamic god rays.
+      </p>
+    </div>
+
+    <!-- Interactive Before / After Comparison Slider -->
+    <div class="mc-box rounded-xl p-3 sm:p-5 max-w-5xl mx-auto bg-[#17212b]">
+      
+      <!-- Comparator Toolbar -->
+      <div class="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-white/10 text-xs font-pixel gap-2">
+        <div class="flex items-center gap-2 text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-mc-emerald animate-pulse"></span>
+          <span>LIVE SHADER COMPARATOR</span>
+        </div>
+        <div class="flex items-center gap-2 text-[10px]">
+          <span class="text-slate-400">PRESET:</span>
+          <select id="shaderPresetSelect" onchange="changeShaderDemoPreset(this.value)" class="bg-black/60 border border-slate-700 text-mc-diamond px-2 py-1 rounded font-pixel">
+            <option value="complementary">Complementary Reimagined (Vibrant)</option>
+            <option value="bsl">BSL Shaders (Cinematic)</option>
+            <option value="seus">SEUS Renewed (Realistic Sun)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Comparison Frame -->
+      <div class="relative w-full aspect-[16/9] sm:aspect-[21/9] rounded-lg overflow-hidden select-none cursor-ew-resize border-2 border-black" id="comparisonWrapper">
+        
+        <!-- AFTER (Shader Enabled: High-Res Vibrant Sunlight) -->
+        <img 
+          id="shaderAfterImg" 
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80" 
+          alt="Minecraft with shaders" 
+          class="absolute inset-0 w-full h-full object-cover filter saturate-125 contrast-110 brightness-105"
+        />
+        <div class="absolute top-4 right-4 mc-badge bg-mc-emerald text-black px-3 py-1.5 rounded font-bold z-10">
+          ✨ SHADER: COMPLEMENTARY V5
+        </div>
+
+        <!-- BEFORE (Vanilla: Muted / Desaturated) -->
+        <div id="comparisonBeforeContainer" class="absolute inset-0 w-1/2 overflow-hidden border-r-2 border-white/80 z-20">
+          <img 
+            id="shaderBeforeImg" 
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80" 
+            alt="Minecraft vanilla graphics" 
+            class="absolute inset-0 w-full h-full object-cover max-w-none filter grayscale-[65%] contrast-90 brightness-75"
+            style="width: 100%; height: 100%;"
+          />
+          <div class="absolute top-4 left-4 mc-badge bg-black/80 text-slate-300 px-3 py-1.5 rounded border border-white/20">
+            ⛏️ VANILLA DEFAULT
+          </div>
+        </div>
+
+        <!-- Draggable Handle -->
+        <div id="comparisonSliderHandle" class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center pointer-events-none">
+          <div class="w-8 h-8 rounded-full bg-mc-diamond border-2 border-black shadow-[0_0_15px_rgba(77,237,244,0.8)] flex items-center justify-center font-bold text-black text-xs">
+            ⇄
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Comparator Caption -->
+      <div class="flex items-center justify-between text-slate-400 font-vt text-sm pt-3">
+        <span>◀ Drag left or right to inspect atmospheric volumetric lighting</span>
+        <span class="text-mc-emeraldLight">Iris / Sodium 1.21 Compatible • ZERO OptiFine bugs</span>
+      </div>
+    </div>
+
+    <!-- Shader Pack Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mt-12">
+      
+      <!-- Shader 1 -->
+      <div class="mc-box rounded-lg p-5 space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="mc-badge bg-mc-emerald text-black px-2 py-0.5 rounded font-bold">COMMUNITY #1</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1">Complementary Reimagined</h3>
+            </div>
+            <span class="text-mc-diamond font-pixel text-xs">95 FPS avg</span>
+          </div>
+
+          <p class="text-slate-300 text-xs mt-3 leading-relaxed">
+            The cleanest shader ever coded. Exceptional waving foliage, atmospheric fog, custom water shading with realistic refraction, and virtually zero shadow flicker.
+          </p>
+
+          <!-- Performance Bar -->
+          <div class="space-y-2 mt-4 text-xs font-vt">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Visual Quality</span>
+                <span class="text-mc-emerald">9.8 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-mc-emerald h-full w-[98%]"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>GPU Friendliness (RTX 3060+)</span>
+                <span class="text-mc-diamond">8.9 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-mc-diamond h-full w-[89%]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+          <span class="font-vt text-slate-400">Profile: <strong>High / Ultra</strong></span>
+          <a href="#benchmarks" onclick="playMcSound('click')" class="mc-button mc-button-diamond text-[9px] px-3 py-2 rounded">
+            INSTALL GUIDE & ZIP
+          </a>
+        </div>
+      </div>
+
+      <!-- Shader 2 -->
+      <div class="mc-box rounded-lg p-5 space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="mc-badge bg-mc-gold text-black px-2 py-0.5 rounded font-bold">CINEMATIC</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1">BSL Shaders v8.2</h3>
+            </div>
+            <span class="text-mc-diamond font-pixel text-xs">110 FPS avg</span>
+          </div>
+
+          <p class="text-slate-300 text-xs mt-3 leading-relaxed">
+            Warm, bright, and vibrant tones with gorgeous volumetric light shafts. Highly customizable motion blur, depth of field, and cel-shading outlines for machinima creators.
+          </p>
+
+          <div class="space-y-2 mt-4 text-xs font-vt">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Visual Quality</span>
+                <span class="text-mc-gold">9.3 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-mc-gold h-full w-[93%]"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>GPU Friendliness</span>
+                <span class="text-mc-diamond">9.2 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-mc-diamond h-full w-[92%]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+          <span class="font-vt text-slate-400">Profile: <strong>Medium / High</strong></span>
+          <a href="#benchmarks" onclick="playMcSound('click')" class="mc-button mc-button-diamond text-[9px] px-3 py-2 rounded">
+            INSTALL GUIDE & ZIP
+          </a>
+        </div>
+      </div>
+
+      <!-- Shader 3 -->
+      <div class="mc-box rounded-lg p-5 space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="mc-badge bg-mc-redstone text-white px-2 py-0.5 rounded font-bold">POTATO PC FRIENDLY</span>
+              <h3 class="font-display font-bold text-xl text-white mt-1">MakeUp Ultra Fast</h3>
+            </div>
+            <span class="text-mc-emerald font-pixel text-xs">170+ FPS</span>
+          </div>
+
+          <p class="text-slate-300 text-xs mt-3 leading-relaxed">
+            Designed specifically for gaming laptops and budget graphics cards (GTX 1650 / Radeon 580). Provides waving trees and soft water with virtually zero framerate penalty.
+          </p>
+
+          <div class="space-y-2 mt-4 text-xs font-vt">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Visual Quality</span>
+                <span class="text-slate-300">8.4 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-slate-300 h-full w-[84%]"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>GPU Friendliness</span>
+                <span class="text-mc-emerald">9.9 / 10</span>
+              </div>
+              <div class="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div class="bg-mc-emerald h-full w-[99%]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+          <span class="font-vt text-slate-400">Profile: <strong>Lite / Fast</strong></span>
+          <a href="#benchmarks" onclick="playMcSound('click')" class="mc-button mc-button-diamond text-[9px] px-3 py-2 rounded">
+            INSTALL GUIDE & ZIP
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PRO GEAR: KEYBOARDS & MICE FOR MINECRAFT ================= -->
+  <section id="gear" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="flex items-center gap-2 font-pixel text-xs text-mc-gold mb-2">
+          <span class="w-3 h-3 bg-mc-gold inline-block"></span>
+          <span>COMPETITIVE GEAR BENCHMARK</span>
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
+          Keyboards & Mice Built for Minecraft Mechanics
+        </h2>
+        <p class="text-slate-400 mt-2 text-sm sm:text-base max-w-2xl">
+          Standard gaming gear reviews focus on CS:GO or Valorant. We test specifically for <strong class="text-white">Rapid-Trigger Ninja Bridging, Drag-Clicking CPS, and Debounce Tuning</strong>.
+        </p>
+      </div>
+
+      <!-- Gear Type Toggle Buttons -->
+      <div class="flex gap-2">
+        <button id="gearToggleKb" onclick="switchGearTab('keyboards')" class="mc-button mc-button-green text-[9px] px-4 py-2.5 rounded">
+          ⌨️ KEYBOARDS
+        </button>
+        <button id="gearToggleMice" onclick="switchGearTab('mice')" class="mc-button text-[9px] px-4 py-2.5 rounded text-slate-200">
+          🖱️ MICE & CPS
+        </button>
+      </div>
+    </div>
+
+    <!-- KEYBOARDS PANEL -->
+    <div id="keyboardsPanel" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Keyboard 1: Wooting 60HE+ -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80" alt="Wooting 60HE" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-emerald text-black px-2 py-0.5 rounded font-bold">#1 FOR BRIDGING</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$175</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">HALL EFFECT MAGNETIC SWITCHES</span>
+            <span class="text-mc-gold text-xs">★★★★★</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Wooting 60HE+ Hall Effect</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            The undisputed king for Godbridging and Breezily bridging. True <strong class="text-mc-emerald">0.1mm Rapid Trigger</strong> resets your sneak and strafe keys the instant your finger lifts.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> Rapid Trigger: 0.1mm to 4.0mm</li>
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> Zero Key-Chatter or Debounce Delay</li>
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> Web-based Wootility Configurator</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Sneak Latency: <strong class="text-mc-emerald">0.8ms</strong></span>
+          <button onclick="simulateOrder('Wooting 60HE+')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+      <!-- Keyboard 2: Razer Huntsman V3 Pro TKL -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1595044426077-d36d9236d54a?auto=format&fit=crop&w=600&q=80" alt="Razer Huntsman V3" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-diamond text-black px-2 py-0.5 rounded font-bold">8000Hz POLLING</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$219</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">ANALOG OPTICAL GEN-2</span>
+            <span class="text-mc-gold text-xs">★★★★☆</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Razer Huntsman V3 Pro TKL</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            Ultra-fast analog optical switches with dedicated onboard LED bar for instantaneous actuation adjustment on the fly between PvP duels.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> Gen-2 Analog Optical Switches</li>
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> Textured Doubleshot PBT Keycaps</li>
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> Dedicated Volume Roller & Buttons</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Polling: <strong class="text-mc-diamond">8000 Hz</strong></span>
+          <button onclick="simulateOrder('Razer Huntsman V3 Pro')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+      <!-- Keyboard 3: Keychron Q1 HE -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=600&q=80" alt="Keychron Q1 HE" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-gold text-black px-2 py-0.5 rounded font-bold">ALUMINUM CUSTOM</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$199</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">GATERON DOUBLE-RAIL MAGNETIC</span>
+            <span class="text-mc-gold text-xs">★★★★★</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Keychron Q1 HE Wireless</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            Full CNC machined aluminum body with gasket mount acoustic dampening. Combines custom mechanical keyboard sound with rapid trigger competitive speed.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> 2.4G Wireless + Bluetooth 5.1</li>
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> Gasket Mount & Acoustic Foam</li>
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> Mac & Windows Hot-Swappable</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Weight: <strong class="text-white">1,735g solid</strong></span>
+          <button onclick="simulateOrder('Keychron Q1 HE')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MICE PANEL (Initially Hidden on Switch) -->
+    <div id="micePanel" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+      
+      <!-- Mouse 1: Glorious Model O Wireless (The Drag Click Legend) -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=600&q=80" alt="Glorious Model O" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-emerald text-black px-2 py-0.5 rounded font-bold">DRAG CLICK KING</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$79</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">ADJUSTABLE 0MS DEBOUNCE</span>
+            <span class="text-mc-gold text-xs">★★★★★</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Glorious Model O 2 Wireless</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            Famous across Hypixel Bedwars and Bridge duels. Features matte coating with adjustable mechanical switches allowing debounce reduction to 0ms for <strong class="text-mc-emerald">30+ CPS drag clicking</strong>.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> Tested Drag Click CPS: 25 - 45 CPS</li>
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> Ultra-light 68g honeycomb chassis</li>
+            <li class="flex items-center gap-2"><span class="text-mc-emerald">✔</span> 0ms Debounce Time Slider</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Max CPS: <strong class="text-mc-emerald">40+ CPS</strong></span>
+          <button onclick="simulateOrder('Glorious Model O 2')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+      <!-- Mouse 2: Logitech G Pro X Superlight 2 -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=600&q=80" alt="Logitech Superlight 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-diamond text-black px-2 py-0.5 rounded font-bold">PRO CHOICE</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$159</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">LIGHTFORCE HYBRID SWITCHES</span>
+            <span class="text-mc-gold text-xs">★★★★★</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Logitech G Pro X Superlight 2</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            The benchmark 60-gram wireless mouse used by top tournament players. Incredible tracking speed, 95-hour battery, and zero sensor spinouts on high-DPI flick shots.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> 60g Featherweight Ergonomics</li>
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> HERO 2 Sensor with 32,000 DPI</li>
+            <li class="flex items-center gap-2"><span class="text-mc-diamond">✔</span> 4000Hz Polling Rate via Lightspeed</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Weight: <strong class="text-mc-diamond">60 grams</strong></span>
+          <button onclick="simulateOrder('Logitech Superlight 2')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+      <!-- Mouse 3: Razer Viper V3 Pro -->
+      <div class="mc-box rounded-lg p-5 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-44 rounded bg-black/60 mb-4 overflow-hidden border border-black">
+            <img src="https://images.unsplash.com/photo-1618499890638-3a0dda1d6b4d?auto=format&fit=crop&w=600&q=80" alt="Razer Viper V3" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <span class="absolute top-2 left-2 mc-badge bg-mc-gold text-black px-2 py-0.5 rounded font-bold">54G HYPERLIGHT</span>
+            <span class="absolute bottom-2 right-2 font-pixel text-xs text-mc-gold">$159</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-vt text-mc-diamond text-sm">FOCUS PRO 35K GEN-2</span>
+            <span class="text-mc-gold text-xs">★★★★☆</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mt-1">Razer Viper V3 Pro</h3>
+          
+          <p class="text-slate-300 text-xs mt-2 leading-relaxed">
+            True 8000Hz wireless polling with optical switches that eliminate double clicking while providing lightning fast jitter click feedback for crystal-clear PvP combos.
+          </p>
+
+          <ul class="space-y-1.5 my-4 text-xs font-vt text-slate-300 bg-black/40 p-3 rounded border border-white/5">
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> 54g Perfectly Balanced Shell</li>
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> 8000Hz Wireless Dongle Included</li>
+            <li class="flex items-center gap-2"><span class="text-mc-gold">✔</span> Optical Mouse Switches Gen-3</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-pixel text-slate-400">Switch: <strong class="text-white">Gen-3 Optical</strong></span>
+          <button onclick="simulateOrder('Razer Viper V3 Pro')" class="mc-button mc-button-green text-[9px] px-3 py-2 rounded">
+            CHECK PRICE
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE CPS TESTER MINI-GAME ================= -->
+  <section id="cps" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t-2 border-black">
+    <div class="mc-box rounded-xl p-6 sm:p-10 bg-[#16202a] relative overflow-hidden">
+      
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Left: CPS Info -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="flex items-center gap-2 font-pixel text-xs text-mc-redstone">
+            <span class="w-3 h-3 bg-mc-redstone inline-block"></span>
+            <span>HYPIXEL COMBAT SPEED LAB</span>
+          </div>
+
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
+            Live CPS Tester (Clicks Per Second)
+          </h2>
+
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Test your <strong class="text-mc-emerald">Normal Clicking</strong>, <strong class="text-mc-diamond">Jitter Clicking</strong>, or <strong class="text-mc-gold">Butterfly / Drag Clicking</strong> speed before heading into Ranked Bedwars.
+          </p>
+
+          <!-- CPS Rank Guide -->
+          <div class="p-3 bg-black/40 border border-white/10 rounded font-vt text-xs space-y-1.5">
+            <div class="flex justify-between"><span class="text-slate-400">1 - 6 CPS:</span> <span class="text-slate-200">Casual Minecrafter 🪵</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">7 - 11 CPS:</span> <span class="text-mc-diamond">PvP Duelist ⚔️</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">12 - 18 CPS:</span> <span class="text-mc-emerald">Butterfly Pro 🦋</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">19+ CPS:</span> <span class="text-mc-gold font-bold">GODBRIDGER / DRAG CLICK GOD ⚡</span></div>
+          </div>
+        </div>
+
+        <!-- Right: The Interactive Click Box -->
+        <div class="lg:col-span-7 flex flex-col items-center">
+          
+          <!-- Click Dashboard Stats -->
+          <div class="grid grid-cols-3 gap-3 w-full max-w-md mb-4 text-center">
+            <div class="p-3 bg-black/50 border-2 border-black rounded">
+              <div class="font-vt text-slate-400 text-xs">TIME REMAINING</div>
+              <div id="cpsTimerDisplay" class="font-pixel text-lg text-white">5.0s</div>
+            </div>
+            <div class="p-3 bg-black/50 border-2 border-black rounded">
+              <div class="font-vt text-slate-400 text-xs">TOTAL CLICKS</div>
+              <div id="cpsClickCount" class="font-pixel text-lg text-mc-emerald">0</div>
+            </div>
+            <div class="p-3 bg-black/50 border-2 border-black rounded">
+              <div class="font-vt text-slate-400 text-xs">CURRENT CPS</div>
+              <div id="cpsScoreDisplay" class="font-pixel text-lg text-mc-gold">0.0</div>
+            </div>
+          </div>
+
+          <!-- The Click Button Target -->
+          <button 
+            id="cpsClickPad" 
+            onmousedown="handleCpsClick(event)" 
+            class="click-target w-full max-w-md h-44 mc-button mc-button-diamond rounded-xl flex flex-col items-center justify-center gap-2 select-none active:scale-[0.98] transition-transform"
+          >
+            <span class="font-pixel text-lg sm:text-xl text-black">CLICK FAST!</span>
+            <span id="cpsPadSubtext" class="font-vt text-sm sm:text-base text-slate-900 font-bold">CLICK TO START 5s TEST</span>
+          </button>
+
+          <!-- Reset Button -->
+          <div class="flex items-center gap-4 mt-4">
+            <button onclick="resetCpsTester()" class="mc-button text-[9px] px-4 py-2 rounded text-slate-300">
+              ↺ RESTART TEST
+            </button>
+            <div id="cpsVerdictText" class="font-pixel text-[10px] text-mc-emeraldLight"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PERFORMANCE LAB & FPS BENCHMARK CALCULATOR ================= -->
+  <section id="benchmarks" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t-2 border-black">
+    
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Calculator Left -->
+      <div class="lg:col-span-6 space-y-6">
+        <div>
+          <div class="flex items-center gap-2 font-pixel text-xs text-mc-emerald mb-2">
+            <span class="w-3 h-3 bg-mc-emerald inline-block"></span>
+            <span>FPS HARDWARE LAB</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
+            Minecraft FPS & Shader Calculator
+          </h2>
+          <p class="text-slate-300 text-sm mt-2">
+            Estimate your real-world framerates at 32 chunks render distance using <strong class="text-mc-emerald">Sodium + Iris</strong> optimization engine on 1.21.
+          </p>
+        </div>
+
+        <!-- Interactive Setup Selectors -->
+        <div class="space-y-4 bg-black/40 p-5 rounded-lg border border-white/10">
+          
+          <div>
+            <label class="block font-pixel text-[10px] text-slate-300 mb-2">SELECT YOUR GPU:</label>
+            <select id="benchGpu" onchange="calculateFpsBenchmark()" class="w-full bg-[#18222b] border-2 border-slate-700 text-mc-diamond px-3 py-2 rounded font-pixel text-xs">
+              <option value="4080">NVIDIA RTX 4080 / 4090 (Enthusiast Tier)</option>
+              <option value="4070" selected>NVIDIA RTX 4070 / RTX 3080 (High Tier)</option>
+              <option value="3060">NVIDIA RTX 3060 / RTX 4060 (Mid Tier)</option>
+              <option value="1660">GTX 1660 Super / RTX 3050 (Budget Tier)</option>
+              <option value="igpu">Intel Iris Xe / AMD Radeon Vega (Integrated)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-pixel text-[10px] text-slate-300 mb-2">SELECT SHADER QUALITY:</label>
+            <select id="benchShader" onchange="calculateFpsBenchmark()" class="w-full bg-[#18222b] border-2 border-slate-700 text-mc-gold px-3 py-2 rounded font-pixel text-xs">
+              <option value="none">No Shaders (Pure Vanilla Sodium)</option>
+              <option value="lite">MakeUp Ultra Fast (Potato Mode)</option>
+              <option value="complementary" selected>Complementary Reimagined (Balanced)</option>
+              <option value="extreme">SEUS PTGI Path-Traced (Ray Traced)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-pixel text-[10px] text-slate-300 mb-2">RENDER RESOLUTION:</label>
+            <div class="flex gap-2">
+              <button onclick="setBenchRes('1080p', this)" class="bench-res-btn flex-1 mc-button text-[9px] py-2 rounded text-slate-200">1080p FHD</button>
+              <button onclick="setBenchRes('1440p', this)" class="bench-res-btn flex-1 mc-button mc-button-green text-[9px] py-2 rounded active">1440p QHD</button>
+              <button onclick="setBenchRes('4k', this)" class="bench-res-btn flex-1 mc-button text-[9px] py-2 rounded text-slate-200">4K UHD</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Calculator Right Result Display -->
+      <div class="lg:col-span-6">
+        <div class="mc-box rounded-xl p-6 bg-[#17222d] space-y-6">
+          
+          <div class="flex items-center justify-between pb-4 border-b border-white/10">
+            <span class="font-pixel text-xs text-slate-300">ESTIMATED 1.21 BENCHMARK</span>
+            <span class="mc-badge bg-mc-emerald text-black px-2 py-0.5 rounded font-bold">IRIS TESTED</span>
+          </div>
+
+          <!-- Big FPS Stat -->
+          <div class="text-center py-4 bg-black/50 rounded-lg border border-white/5">
+            <div class="font-vt text-slate-400 text-sm">AVERAGE SMOOTH FRAMERATE</div>
+            <div class="flex items-center justify-center gap-2">
+              <span id="calculatedFpsNumber" class="font-pixel text-4xl sm:text-5xl text-mc-emerald">168</span>
+              <span class="font-pixel text-lg text-slate-400">FPS</span>
+            </div>
+            <div id="calculatedFpsRating" class="font-pixel text-[10px] text-mc-diamond mt-2">
+              ⚡ ULTRA BUTTERY (144Hz+ Monitor Ready)
+            </div>
+          </div>
+
+          <!-- Breakdown Bars -->
+          <div class="space-y-3 font-vt text-sm">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>1% Frametime Lows (Stutter Free)</span>
+                <span id="calculatedLowFps" class="text-mc-emerald font-bold">122 FPS</span>
+              </div>
+              <div class="w-full bg-black/60 h-2.5 rounded-full overflow-hidden">
+                <div id="lowsBar" class="bg-mc-emerald h-full w-[72%] transition-all duration-300"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>VRAM Usage at 32 Chunks</span>
+                <span id="calculatedVram" class="text-mc-gold font-bold">5.8 GB / 12 GB</span>
+              </div>
+              <div class="w-full bg-black/60 h-2.5 rounded-full overflow-hidden">
+                <div id="vramBar" class="bg-mc-gold h-full w-[48%] transition-all duration-300"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Helpful Advice -->
+          <div class="p-3.5 bg-[#1b2b38] rounded border border-mc-diamond/30 flex items-start gap-3">
+            <span class="text-base">💡</span>
+            <p id="benchTip" class="text-xs text-slate-300 font-body leading-relaxed">
+              <strong>Pro Optimization Tip:</strong> Allocate 6GB RAM in the Minecraft Launcher JVM arguments to avoid Java garbage collection hitches with Complementary shaders.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= COMMUNITY CRAFTING HUB & NEWSLETTER ================= -->
+  <section class="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t-2 border-black">
+    <div class="mc-box rounded-xl p-8 sm:p-12 bg-[#1b2631] text-center max-w-4xl mx-auto relative">
+      
+      <!-- Pixel Diamond floating -->
+      <div class="w-12 h-12 mx-auto mb-4 pixelated diamond-pulse">
+        <svg viewBox="0 0 16 16" class="w-full h-full">
+          <polygon points="8,1 15,6 8,15 1,6" fill="#4dedf4"/>
+          <polygon points="8,3 13,6 8,13 3,6" fill="#2bb3be"/>
+          <polygon points="8,4 11,6 8,11 5,6" fill="#8bf8fc"/>
+        </svg>
+      </div>
+
+      <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
+        Never Miss a Texture Drop or Patch
+      </h2>
+      <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mt-3">
+        Join 42,000+ builders and competitive players receiving our weekly digest of newly updated 1.21 resource packs, shader patches, and keyboard profile configs.
+      </p>
+
+      <!-- Form -->
+      <form onsubmit="handleNewsletter(event)" class="mt-8 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+        <input 
+          type="email" 
+          required 
+          placeholder="steve@minecraft.net" 
+          class="flex-1 bg-black/60 border-2 border-slate-700 text-white px-4 py-3 rounded text-xs font-pixel outline-none focus:border-mc-emerald"
+        />
+        <button type="submit" class="mc-button mc-button-green text-xs px-6 py-3 rounded whitespace-nowrap">
+          JOIN DISPATCH
+        </button>
+      </form>
+
+      <div id="newsletterSuccess" class="hidden font-pixel text-xs text-mc-emerald mt-4">
+        🎉 Inventory Updated! Check your inbox for the 1.21 Starter Pack.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-[#0b0f14] border-t-2 border-black pt-12 pb-16 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      
+      <!-- Brand col -->
+      <div class="col-span-2 md:col-span-1 space-y-3">
+        <div class="flex items-center gap-2 font-pixel text-white text-sm">
+          <span class="text-mc-grassLight">■</span> BLOCKBASE
+        </div>
+        <p class="font-vt text-slate-400 text-base leading-relaxed">
+          The non-corporate Minecraft resource directory. Real benchmarks, zero bloat, and pure hardware testing.
+        </p>
+        <div class="font-pixel text-[8px] text-slate-500">
+          Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.
+        </div>
+      </div>
+
+      <!-- Col 2 -->
+      <div class="space-y-2 font-vt text-base">
+        <h4 class="font-pixel text-[10px] text-mc-diamond mb-2 uppercase">RESOURCES</h4>
+        <div><a href="#packs" class="text-slate-400 hover:text-white">16x PvP Texture Packs</a></div>
+        <div><a href="#packs" class="text-slate-400 hover:text-white">Faithful 32x / 64x</a></div>
+        <div><a href="#packs" class="text-slate-400 hover:text-white">Realism PBR LabPBR</a></div>
+        <div><a href="#packs" class="text-slate-400 hover:text-white">Dark Mode GUIs</a></div>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="space-y-2 font-vt text-base">
+        <h4 class="font-pixel text-[10px] text-mc-emerald mb-2 uppercase">SHADERS & MODS</h4>
+        <div><a href="#shaders" class="text-slate-400 hover:text-white">Iris + Sodium Setup</a></div>
+        <div><a href="#shaders" class="text-slate-400 hover:text-white">Complementary v5</a></div>
+        <div><a href="#shaders" class="text-slate-400 hover:text-white">BSL Shaders</a></div>
+        <div><a href="#benchmarks" class="text-slate-400 hover:text-white">FPS Optimization Guide</a></div>
+      </div>
+
+      <!-- Col 4 -->
+      <div class="space-y-2 font-vt text-base">
+        <h4 class="font-pixel text-[10px] text-mc-gold mb-2 uppercase">HARDWARE</h4>
+        <div><a href="#gear" class="text-slate-400 hover:text-white">Rapid Trigger Keyboards</a></div>
+        <div><a href="#gear" class="text-slate-400 hover:text-white">Drag Click Mice (0ms)</a></div>
+        <div><a href="#cps" class="text-slate-400 hover:text-white">Hypixel CPS Tester</a></div>
+        <div><a href="#gear" class="text-slate-400 hover:text-white">Bridging Profiles</a></div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-vt">
+      <span>© 2025 BLOCKBASE. CRAFTED WITH 💚 FOR MINECRAFT PLAYERS WORLDWIDE.</span>
+      <div class="flex gap-4 mt-2 sm:mt-0 font-pixel text-[9px]">
+        <a href="#top" class="text-slate-400 hover:text-white">BACK TO TOP ▲</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= PACK DETAILS MODAL ================= -->
+  <div id="packModal" class="fixed inset-0 bg-black/80 z-[120] backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="mc-box rounded-xl max-w-lg w-full p-6 bg-[#16212b] relative">
+      
+      <!-- Close button -->
+      <button onclick="closePackModal()" class="absolute top-4 right-4 mc-button px-2.5 py-1 text-xs">✕</button>
+      
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 rounded bg-mc-grass/30 border border-mc-grass flex items-center justify-center font-pixel text-xs text-mc-grassLight">
+          📦
+        </div>
+        <div>
+          <h3 id="modalPackTitle" class="font-display font-bold text-xl text-white">Pack Title</h3>
+          <div class="flex gap-2 text-[10px] font-vt text-slate-400">
+            <span>Author: <strong id="modalPackAuthor" class="text-mc-diamond">Community</strong></span>
+            <span>•</span>
+            <span>Resolution: <strong id="modalPackRes" class="text-mc-emerald">32x</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-black/50 rounded border border-white/10 text-xs text-slate-300 leading-relaxed font-body mb-4" id="modalPackDesc">
+        Pack description goes here.
+      </div>
+
+      <!-- Installation Steps -->
+      <div class="font-vt text-xs space-y-1 text-slate-400 mb-6 bg-[#111922] p-3 rounded">
+        <div class="text-mc-gold font-pixel text-[8px] mb-1">INSTALLATION INSTRUCTIONS:</div>
+        <div>1. Press <strong>Win + R</strong> and enter <code class="text-mc-diamond">%appdata%/.minecraft/resourcepacks</code></div>
+        <div>2. Drag the downloaded <code class="text-mc-emerald">.zip</code> into the folder.</div>
+        <div>3. Launch Minecraft 1.21 & select it under Options → Resource Packs!</div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="downloadPackSimulator()" class="mc-button mc-button-green flex-1 py-3 rounded text-xs">
+          ⚡ DOWNLOAD ZIP FILE
+        </button>
+        <button onclick="closePackModal()" class="mc-button px-4 py-3 rounded text-xs text-slate-300">
+          CLOSE
+        </button>
+      </div>
+
+      <div id="downloadSimAlert" class="hidden font-pixel text-[9px] text-mc-emerald text-center mt-3">
+        ✓ Starting simulated direct zip download!
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    /* ================= 1. WEB AUDIO SYNTHESIZER FOR MINECRAFT SFX ================= */
+    let sfxEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudio() {
+      sfxEnabled = !sfxEnabled;
+      const stateSpan = document.getElementById('soundState');
+      const iconSpan = document.getElementById('soundIcon');
+      if (sfxEnabled) {
+        stateSpan.innerText = 'ON';
+        stateSpan.className = 'text-mc-emerald';
+        iconSpan.innerText = '🔊';
+        playMcSound('click');
+      } else {
+        stateSpan.innerText = 'OFF';
+        stateSpan.className = 'text-mc-redstone';
+        iconSpan.innerText = '🔇';
+      }
+    }
+
+    function playMcSound(type) {
+      if (!sfxEnabled) return;
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+          // Minecraft wooden button / UI click
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(200, now + 0.04);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'punch') {
+          // Block hit thump
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(40, now + 0.08);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'level') {
+          // Minecraft XP chime
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.setValueAtTime(880, now + 0.08); // A5
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) {
+        console.log("Audio not allowed yet without user interaction");
+      }
+    }
+
+    /* ================= 2. SCROLL PROGRESS XP BAR ================= */
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scrollXpBar').style.width = scrolled + '%';
+    });
+
+    /* ================= 3. THREE.JS 3D VOXEL BLOCK RENDERER ================= */
+    let scene, camera, renderer, cube;
+    let isDragging = false;
+    let prevMousePos = { x: 0, y: 0 };
+
+    function initThreeVoxelBlock() {
+      const container = document.getElementById('threeBlockCanvas');
+      if (!container) return;
+
+      const width = container.clientWidth || 300;
+      const height = container.clientHeight || 220;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(2.4, 2.0, 2.4);
+      camera.lookAt(0, 0, 0);
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+      dirLight.position.set(5, 10, 7);
+      scene.add(dirLight);
+
+      // Canvas Block Textures Generator
+      cube = createVoxelBlockMesh('grass');
+      scene.add(cube);
+
+      // Mouse drag controls for rotating 3D block
+      container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging || !cube) return;
+        const deltaX = e.clientX - prevMousePos.x;
+        const deltaY = e.clientY - prevMousePos.y;
+        cube.rotation.y += deltaX * 0.015;
+        cube.rotation.x += deltaY * 0.015;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      });
+
+      // Touch drag for mobile
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      });
+      window.addEventListener('touchend', () => isDragging = false);
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || !cube || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - prevMousePos.x;
+        const deltaY = e.touches[0].clientY - prevMousePos.y;
+        cube.rotation.y += deltaX * 0.015;
+        cube.rotation.x += deltaY * 0.015;
+        prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!isDragging && cube) {
+          cube.rotation.y += 0.006;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        if (!container || !renderer || !camera) return;
+        const newW = container.clientWidth;
+        const newH = container.clientHeight;
+        camera.aspect = newW / newH;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newW, newH);
+      });
+    }
+
+    function makePixelTexture(type, side) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 16;
+      canvas.height = 16;
+      const ctx = canvas.getContext('2d');
+
+      if (type === 'grass') {
+        if (side === 'top') {
+          ctx.fillStyle = '#5c8e32';
+          ctx.fillRect(0, 0, 16, 16);
+          // Noise
+          for (let i = 0; i < 40; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#74b638' : '#497327';
+            ctx.fillRect(Math.floor(Math.random()*16), Math.floor(Math.random()*16), 1, 1);
+          }
+        } else if (side === 'bottom') {
+          ctx.fillStyle = '#866043';
+          ctx.fillRect(0, 0, 16, 16);
+          for (let i = 0; i < 35; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#573d26' : '#9b7151';
+            ctx.fillRect(Math.floor(Math.random()*16), Math.floor(Math.random()*16), 1, 1);
+          }
+        } else {
+          // Dirt side with grass top hanging
+          ctx.fillStyle = '#866043';
+          ctx.fillRect(0, 0, 16, 16);
+          for (let i = 0; i < 25; i++) {
+            ctx.fillStyle = Math.random() > 0.5 ? '#573d26' : '#9b7151';
+            ctx.fillRect(Math.floor(Math.random()*16), Math.floor(Math.random()*16), 1, 1);
+          }
+          ctx.fillStyle = '#5c8e32';
+          ctx.fillRect(0, 0, 16, 4);
+          ctx.fillRect(2, 4, 2, 3);
+          ctx.fillRect(6, 4, 3, 4);
+          ctx.fillRect(11, 4, 2, 2);
+          ctx.fillRect(14, 4, 2, 3);
+        }
+      } else if (type === 'diamond') {
+        // Stone with diamond flecks
+        ctx.fillStyle = '#686868';
+        ctx.fillRect(0, 0, 16, 16);
+        for (let i = 0; i < 30; i++) {
+          ctx.fillStyle = Math.random() > 0.5 ? '#555555' : '#7c7c7c';
+          ctx.fillRect(Math.floor(Math.random()*16), Math.floor(Math.random()*16), 1, 1);
+        }
+        // Diamond ores
+        ctx.fillStyle = '#4dedf4';
+        const spots = [[3,4],[4,4],[4,5],[9,3],[10,3],[10,4],[6,9],[7,9],[7,10],[12,11],[13,11],[12,12]];
+        spots.forEach(([x,y]) => {
+          ctx.fillRect(x, y, 1, 1);
+        });
+      } else if (type === 'tnt') {
+        if (side === 'top' || side === 'bottom') {
+          ctx.fillStyle = '#ab281b';
+          ctx.fillRect(0, 0, 16, 16);
+          ctx.fillStyle = '#6e1810';
+          for (let i = 0; i < 20; i++) {
+            ctx.fillRect(Math.floor(Math.random()*16), Math.floor(Math.random()*16), 1, 1);
+          }
+        } else {
+          ctx.fillStyle = '#d32f2f';
+          ctx.fillRect(0, 0, 16, 16);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 6, 16, 4);
+          ctx.fillStyle = '#000000';
+          ctx.font = 'bold 3px sans-serif';
+          ctx.fillText('TNT', 4, 9.5);
+        }
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.magFilter = THREE.NearestFilter;
+      texture.minFilter = THREE.NearestFilter;
+      return texture;
+    }
+
+    function createVoxelBlockMesh(type) {
+      const materials = [
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'side') }), // px
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'side') }), // nx
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'top') }),  // py
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'bottom') }),// ny
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'side') }), // pz
+        new THREE.MeshLambertMaterial({ map: makePixelTexture(type, 'side') })  // nz
+      ];
+      const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+      return new THREE.Mesh(geometry, materials);
+    }
+
+    function changeBlockType(type) {
+      playMcSound('click');
+      if (cube && scene) {
+        scene.remove(cube);
+        cube = createVoxelBlockMesh(type);
+        scene.add(cube);
+      }
+      const desc = document.getElementById('blockDesc');
+      if (type === 'grass') desc.innerText = 'Grass Block • Hardness: 0.6 • Tool: Shovel';
+      if (type === 'diamond') desc.innerText = 'Diamond Ore • Hardness: 3.0 • Tool: Iron Pick+';
+      if (type === 'tnt') desc.innerText = 'TNT • Hardness: 0.0 • Trigger: Redstone / Flint';
+    }
+
+    function mineBlockEffect() {
+      playMcSound('punch');
+      if (!cube) return;
+      cube.scale.set(1.15, 1.15, 1.15);
+      setTimeout(() => {
+        cube.scale.set(1, 1, 1);
+      }, 100);
+    }
+
+    /* ================= 4. COMPARISON SLIDER LOGIC ================= */
+    let isComparing = false;
+    const wrapper = document.getElementById('comparisonWrapper');
+    const beforeContainer = document.getElementById('comparisonBeforeContainer');
+    const handle = document.getElementById('comparisonSliderHandle');
+
+    function updateSliderPosition(xPos) {
+      const rect = wrapper.getBoundingClientRect();
+      let percent = ((xPos - rect.left) / rect.width) * 100;
+      percent = Math.max(0, Math.min(100, percent));
+      
+      beforeContainer.style.width = percent + '%';
+      handle.style.left = percent + '%';
+    }
+
+    if (wrapper) {
+      wrapper.addEventListener('mousedown', (e) => {
+        isComparing = true;
+        updateSliderPosition(e.clientX);
+      });
+      window.addEventListener('mouseup', () => isComparing = false);
+      window.addEventListener('mousemove', (e) => {
+        if (isComparing) updateSliderPosition(e.clientX);
+      });
+
+      // Mobile Touch support
+      wrapper.addEventListener('touchstart', (e) => {
+        isComparing = true;
+        updateSliderPosition(e.touches[0].clientX);
+      });
+      window.addEventListener('touchend', () => isComparing = false);
+      window.addEventListener('touchmove', (e) => {
+        if (isComparing) updateSliderPosition(e.touches[0].clientX);
+      });
+    }
+
+    function changeShaderDemoPreset(preset) {
+      playMcSound('click');
+      const afterImg = document.getElementById('shaderAfterImg');
+      if (preset === 'complementary') {
+        afterImg.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80';
+        afterImg.className = 'absolute inset-0 w-full h-full object-cover filter saturate-125 contrast-110 brightness-105';
+      } else if (preset === 'bsl') {
+        afterImg.src = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1600&q=80';
+        afterImg.className = 'absolute inset-0 w-full h-full object-cover filter sepia-[20%] contrast-110 brightness-105';
+      } else if (preset === 'seus') {
+        afterImg.src = 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1600&q=80';
+        afterImg.className = 'absolute inset-0 w-full h-full object-cover filter contrast-125 brightness-95';
+      }
+    }
+
+    /* ================= 5. RESOURCE PACK FILTER & SEARCH ================= */
+    let currentCategory = 'all';
+
+    function setPackCategory(cat, btn) {
+      playMcSound('click');
+      currentCategory = cat;
+      const buttons = document.querySelectorAll('#packTabGroup button');
+      buttons.forEach(b => {
+        b.className = 'mc-button text-[9px] px-3.5 py-2.5 rounded text-slate-200';
+      });
+      btn.className = 'mc-button mc-button-green text-[9px] px-3.5 py-2.5 rounded active';
+      filterPacks();
+    }
+
+    function filterPacks() {
+      const searchVal = document.getElementById('packSearchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.pack-card');
+
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name');
+        const cat = card.getAttribute('data-category');
+        
+        const matchesCategory = (currentCategory === 'all') || cat.includes(currentCategory);
+        const matchesSearch = name.includes(searchVal);
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    /* ================= 6. CPS SPEED TESTER LOGIC ================= */
+    let cpsClicks = 0;
+    let cpsTimeLeft = 5.0;
+    let cpsTimerInterval = null;
+    let cpsActive = false;
+
+    function handleCpsClick(e) {
+      e.preventDefault();
+      playMcSound('punch');
+
+      if (!cpsActive && cpsTimeLeft === 5.0) {
+        // Start Test
+        cpsActive = true;
+        cpsClicks = 1;
+        document.getElementById('cpsPadSubtext').innerText = 'KEEP CLICKING FAST!';
+        
+        cpsTimerInterval = setInterval(() => {
+          cpsTimeLeft -= 0.1;
+          if (cpsTimeLeft <= 0) {
+            cpsTimeLeft = 0;
+            finishCpsTest();
+          }
+          document.getElementById('cpsTimerDisplay').innerText = cpsTimeLeft.toFixed(1) + 's';
+          const currentCps = (cpsClicks / (5.0 - cpsTimeLeft)).toFixed(1);
+          document.getElementById('cpsScoreDisplay').innerText = isFinite(currentCps) ? currentCps : '0.0';
+        }, 100);
+
+      } else if (cpsActive) {
+        cpsClicks++;
+      }
+
+      document.getElementById('cpsClickCount').innerText = cpsClicks;
+    }
+
+    function finishCpsTest() {
+      clearInterval(cpsTimerInterval);
+      cpsActive = false;
+      const finalCps = (cpsClicks / 5.0).toFixed(1);
+      document.getElementById('cpsScoreDisplay').innerText = finalCps;
+      document.getElementById('cpsPadSubtext').innerText = 'TEST FINISHED!';
+      
+      const verdict = document.getElementById('cpsVerdictText');
+      playMcSound('level');
+
+      if (finalCps < 7) {
+        verdict.innerText = 'Tier: Casual Miner (Recommended: Jitter Click Technique)';
+      } else if (finalCps < 12) {
+        verdict.innerText = 'Tier: Competitive PvP Duelist ⚔️';
+      } else if (finalCps < 18) {
+        verdict.innerText = 'Tier: God-tier Butterfly Clicker 🦋';
+      } else {
+        verdict.innerText = 'Tier: DRAG-CLICK LEGEND / GODBRIDGER ⚡';
+      }
+    }
+
+    function resetCpsTester() {
+      playMcSound('click');
+      clearInterval(cpsTimerInterval);
+      cpsActive = false;
+      cpsClicks = 0;
+      cpsTimeLeft = 5.0;
+      document.getElementById('cpsClickCount').innerText = '0';
+      document.getElementById('cpsTimerDisplay').innerText = '5.0s';
+      document.getElementById('cpsScoreDisplay').innerText = '0.0';
+      document.getElementById('cpsPadSubtext').innerText = 'CLICK TO START 5s TEST';
+      document.getElementById('cpsVerdictText').innerText = '';
+    }
+
+    /* ================= 7. GEAR TAB SWITCHER ================= */
+    function switchGearTab(tab) {
+      playMcSound('click');
+      const kbPanel = document.getElementById('keyboardsPanel');
+      const micePanel = document.getElementById('micePanel');
+      const kbBtn = document.getElementById('gearToggleKb');
+      const miceBtn = document.getElementById('gearToggleMice');
+
+      if (tab === 'keyboards') {
+        kbPanel.classList.remove('hidden');
+        micePanel.classList.add('hidden');
+        kbBtn.className = 'mc-button mc-button-green text-[9px] px-4 py-2.5 rounded';
+        miceBtn.className = 'mc-button text-[9px] px-4 py-2.5 rounded text-slate-200';
+      } else {
+        micePanel.classList.remove('hidden');
+        kbPanel.classList.add('hidden');
+        miceBtn.className = 'mc-button mc-button-green text-[9px] px-4 py-2.5 rounded';
+        kbBtn.className = 'mc-button text-[9px] px-4 py-2.5 rounded text-slate-200';
+      }
+    }
+
+    /* ================= 8. FPS BENCHMARK CALCULATOR ================= */
+    let currentRes = '1440p';
+
+    function setBenchRes(res, btn) {
+      playMcSound('click');
+      currentRes = res;
+      document.querySelectorAll('.bench-res-btn').forEach(b => {
+        b.className = 'bench-res-btn flex-1 mc-button text-[9px] py-2 rounded text-slate-200';
+      });
+      btn.className = 'bench-res-btn flex-1 mc-button mc-button-green text-[9px] py-2 rounded active';
+      calculateFpsBenchmark();
+    }
+
+    function calculateFpsBenchmark() {
+      const gpu = document.getElementById('benchGpu').value;
+      const shader = document.getElementById('benchShader').value;
+
+      let baseFps = 280;
+
+      // GPU scaling
+      if (gpu === '4080') baseFps = 480;
+      if (gpu === '4070') baseFps = 360;
+      if (gpu === '3060') baseFps = 240;
+      if (gpu === '1660') baseFps = 150;
+      if (gpu === 'igpu') baseFps = 65;
+
+      // Shader impact
+      let shaderMult = 1.0;
+      if (shader === 'none') shaderMult = 1.0;
+      if (shader === 'lite') shaderMult = 0.75;
+      if (shader === 'complementary') shaderMult = 0.48;
+      if (shader === 'extreme') shaderMult = 0.22;
+
+      // Resolution impact
+      let resMult = 1.0;
+      if (currentRes === '1080p') resMult = 1.15;
+      if (currentRes === '1440p') resMult = 0.95;
+      if (currentRes === '4k') resMult = 0.55;
+
+      const finalFps = Math.round(baseFps * shaderMult * resMult);
+      const lowsFps = Math.round(finalFps * 0.72);
+
+      document.getElementById('calculatedFpsNumber').innerText = finalFps;
+      document.getElementById('calculatedLowFps').innerText = lowsFps + ' FPS';
+
+      const rating = document.getElementById('calculatedFpsRating');
+      if (finalFps >= 144) {
+        rating.innerText = '⚡ ULTRA BUTTERY (144Hz - 240Hz High Refresh Ready)';
+        rating.className = 'font-pixel text-[10px] text-mc-emerald mt-2';
+      } else if (finalFps >= 60) {
+        rating.innerText = '✔ SMOOTH 60+ FPS (Solid Gameplay Experience)';
+        rating.className = 'font-pixel text-[10px] text-mc-diamond mt-2';
+      } else {
+        rating.innerText = '⚠️ POTATO WARNING (Consider Lowering Chunks to 16)';
+        rating.className = 'font-pixel text-[10px] text-mc-redstone mt-2';
+      }
+    }
+
+    /* ================= 9. MODAL & SIMULATORS ================= */
+    function openPackModal(title, res, version, author, downloads, desc) {
+      playMcSound('click');
+      document.getElementById('modalPackTitle').innerText = title;
+      document.getElementById('modalPackRes').innerText = res;
+      document.getElementById('modalPackAuthor').innerText = author;
+      document.getElementById('modalPackDesc').innerText = desc;
+      document.getElementById('packModal').classList.remove('hidden');
+      document.getElementById('downloadSimAlert').classList.add('hidden');
+    }
+
+    function closePackModal() {
+      playMcSound('click');
+      document.getElementById('packModal').classList.add('hidden');
+    }
+
+    function downloadPackSimulator() {
+      playMcSound('level');
+      const alertBox = document.getElementById('downloadSimAlert');
+      alertBox.classList.remove('hidden');
+      setTimeout(() => {
+        alertBox.innerText = '✔ Download complete! Added to /resourcepacks';
+      }, 1500);
+    }
+
+    function simulateOrder(item) {
+      playMcSound('level');
+      alert(`⚔️ Opening verified manufacturer partner for ${item}. Lowest price checked for 2025!`);
+    }
+
+    function handleNewsletter(e) {
+      e.preventDefault();
+      playMcSound('level');
+      document.getElementById('newsletterSuccess').classList.remove('hidden');
+    }
+
+    function toggleMobileNav() {
+      playMcSound('click');
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Initialize Canvas on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initThreeVoxelBlock();
+      calculateFpsBenchmark();
+    });
+  </script>
+</body>
+</html>
